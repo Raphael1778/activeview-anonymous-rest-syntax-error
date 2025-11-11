@@ -1,0 +1,36 @@
+# Simulate fertilizer leakage detection in a knapsack
+# Using a weight sensor (load cell) to detect unexpected loss
+
+import time
+
+# Simulated initial weight of fertilizer in kg
+initial_weight = 10.0  
+current_weight = initial_weight
+
+# Threshold for leakage detection (kg)
+leakage_threshold = 0.2  
+
+def check_leakage(current_weight, initial_weight, threshold):
+    loss = initial_weight - current_weight
+    if loss >= threshold:
+        return True, loss
+    return False, loss
+
+# Simulate monitoring over time
+for minute in range(1, 61):  # monitor for 60 minutes
+    # In a real setup, current_weight would be read from a load sensor
+    # For simulation, we randomly reduce the weight to mimic leakage
+    import random
+    current_weight -= random.uniform(0, 0.05)
+    
+    leakage_detected, loss = check_leakage(current_weight, initial_weight, leakage_threshold)
+    
+    if leakage_detected:
+        print(f"[ALERT] Fertilizer leakage detected! Lost {loss:.2f} kg")
+        print("Suggested action: Check knapsack lining, tighten closures, or transfer fertilizer to a sealed bag.")
+        # Reset initial weight after fix
+        initial_weight = current_weight
+    else:
+        print(f"Minute {minute}: No leakage detected. Current weight: {current_weight:.2f} kg")
+    
+    time.sleep(0.1)  # simulate time passing
